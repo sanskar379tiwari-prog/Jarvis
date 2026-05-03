@@ -1,12 +1,17 @@
-
+<img width="1881" height="646" alt="image" src="https://github.com/user-attachments/assets/57400ae2-c5f6-4d46-8e25-8cd1a150dbd9" />
 
 # JARVIS — Local AI Agent (Version 1)
+<img width="1536" height="1024" alt="ChatGPT Image May 3, 2026, 07_28_19 PM" src="https://github.com/user-attachments/assets/c2963a68-78c0-428b-9452-d30db9a799d4" />
 
 A structured local AI agent that converts natural language into controlled, validated file and system actions using a layered architecture.
 
+![Python](https://img.shields.io/badge/python-3.9+-blue)
+![LLM](https://img.shields.io/badge/LLM-Gemini-orange)
+![Status](https://img.shields.io/badge/status-v1%20stable-green)
+
 ## What This Is
 
-It is a local agent system that takes natural language input and translates it into real, deterministic operations on your workspace.
+JARVIS is an attempt to build a local agent that can take natural language input and reliably execute tasks on a workspace.
 
 It can:
 
@@ -38,21 +43,8 @@ That's when the system transformed from a reactive tool into something predictab
 
 The system follows a three-stage pipeline:
 
-```
-User Input
-   ↓
-Intent Extraction (LLM)
-   ↓
-Planning (LLM)
-   ↓
-Action Compilation (structured JSON)
-   ↓
-Execution (Python + filesystem)
-   ↓
-Validation (system-level checks)
-   ↓
-Response
-```
+<img width="1151" height="473" alt="image" src="https://github.com/user-attachments/assets/57be041a-2400-4e24-8e3c-077b387ca22d" />
+
 
 Each stage has a single responsibility. This makes the system predictable, testable, and debuggable.
 
@@ -65,21 +57,21 @@ Each stage has a single responsibility. This makes the system predictable, testa
  ├── llm_provider.py    # LLM abstraction (Gemini / future models)
  ├── task_state.py      # Task tracking and observability
  ├── requirements.txt
- ├── created_files/     # All generated outputs  
+ ├── created_files/     # All generated outputs
  ├── memory/            # Task summaries
  ├── tools/             # Generated tools (optional)
- ├── logs/              # Execution logs   (optional)
+ ├── logs/              # Execution logs
 ```
 
 ## How It Works
 
 ### Stage 1: Intent Extraction
 
-The LLM converts your natural language input into structured meaning. Instead of guessing, if something is ambiguous, the system asks clarifying questions.
+The LLM converts your natural language input into structured meaning. In cases where the input is ambiguous, the system may ask clarifying questions to resolve it.
 
 ### Stage 2: Planning
 
-The LLM decomposes your task into ordered, atomic steps. This plan is human-readable and can be reviewed before execution begins.
+The LLM decomposes your task into ordered, atomic steps. The plan is internally structured and debuggable through logs.
 
 ### Stage 3: Action Compilation
 
@@ -87,11 +79,11 @@ The system converts the plan into strict JSON actions. No ambiguity. Each action
 
 ### Stage 4: Execution
 
-Python code performs the actual file operations. Not LLM output running directly—structured, validated commands.
+Controlled and validated execution. Not LLM output running directly—structured, validated commands.
 
 ### Stage 5: Validation
 
-After each operation, the system verifies the result. If a file was supposed to be created, it checks that the file actually exists. If code was generated, it validates syntax.
+After each operation, the system verifies the result. If a file was supposed to be created, it checks that the file actually exists. Generated code receives basic validation before being saved.
 
 ```python
 if not file_exists:
@@ -102,7 +94,7 @@ No hallucinated successes.
 
 ## Core Components
 
-### jarvis.py — Core Engine
+### jarvis.py  Core Engine
 
 This is where the system logic lives. It handles:
 
@@ -114,11 +106,11 @@ This is where the system logic lives. It handles:
 
 All in one coordinated pipeline.
 
-### llm_provider.py — Model Interface
+### llm_provider.py Model Interface
 
 Handles communication with LLMs. Currently supports Gemini as the primary model. Designed to be replaceable—you could swap in local models, NVIDIA endpoints, or other providers without changing the core logic.
 
-### api.py — Interface Layer
+### api.py  Interface Layer
 
 Built with FastAPI. It exposes:
 
@@ -127,7 +119,7 @@ Built with FastAPI. It exposes:
 
 This separation means JARVIS can be used standalone or integrated with your existing tools.
 
-### task_state.py — Observability
+### task_state.py  Observability
 
 Tracks task status, progress, and logs. Gives visibility into what the system is doing and what happened.
 
@@ -211,6 +203,39 @@ POST /execute
 }
 ```
 
+## How This Differs from Typical AI Tools
+
+Most AI systems follow a simple pipeline:
+
+```
+prompt → generate → output
+```
+
+JARVIS introduces structure:
+
+```
+intent → plan → execute → validate
+```
+
+This adds:
+
+- separation of concerns (understanding is separate from execution)
+- verifiable results (claims are checked against filesystem reality)
+- reduced hallucination risk (validation catches inconsistencies)
+- better debugging and control (each stage is auditable)
+
+The goal is not just better generation, but reliable system behavior.
+
+## Example
+
+<img width="1207" height="633" alt="image" src="https://github.com/user-attachments/assets/53956083-201f-4872-ac46-16f0f63f244e" />
+
+-------------------------------------------------------------------------------------------------
+
+<img width="1417" height="1017" alt="image" src="https://github.com/user-attachments/assets/2cc1759d-fe3f-416e-8ee6-340452bdc5cf" />
+
+
+
 ## What It Can Do (Version 1)
 
 - multi-file project generation
@@ -228,6 +253,7 @@ POST /execute
 - work without an external LLM (depends on Gemini)
 
 ## Key Insights
+<img width="1021" height="1047" alt="image" src="https://github.com/user-attachments/assets/b2c235bb-e691-4d81-8c6a-146e55784c50" />
 
 Over the course of building this, certain lessons became clear.
 
@@ -256,10 +282,6 @@ This project started as a simple pipeline: prompt → code → execute. It becam
 Most of the engineering effort wasn't in the model or prompt engineering. It was in everything around the model—the architecture, the validation, the context management, the state tracking.
 
 If you're building similar systems or experimenting with agent architectures, I'd like to hear your thoughts.
-
-## License
-
-MIT
 
 ## Questions?
 
